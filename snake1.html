@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 800px;
+            border: 1px solid #333;
+
+
+
+        }
+
+        #snake {
+            position: absolute;
+            width: 40px;
+            height: 20px;
+            background-color: green;
+padding:10px;
+        }
+
+        #food {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+        }
+
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            color: white;
+        }
+
+       
+    </style>
+    <title>Snake Game</title>
+</head>
+<body>
+    <div id="game-container">
+        <div id="snake"></div>
+        <div id="food"></div>
+        <div id="score">Score: 0</div>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameContainer = document.getElementById('game-container');
+            const snake = document.getElementById('snake');
+            const food = document.getElementById('food');
+            const scoreElement = document.getElementById('score');
+
+            let snakeX = 0;
+            let snakeY = 0;
+            let snakeDirection = 'right';
+            let score = 0;
+
+            function generateFood() {
+                const maxX = (gameContainer.offsetWidth / 20) - 1;
+                const maxY = (gameContainer.offsetHeight / 20) - 1;
+
+                const foodX = Math.floor(Math.random() * maxX) * 20;
+                const foodY = Math.floor(Math.random() * maxY) * 20;
+
+                food.style.left = foodX + 'px';
+                food.style.top = foodY + 'px';
+            }
+
+            function updateScore() {
+                scoreElement.innerText = 'Score: ' + score;
+            }
+
+            function restartGame() {
+                snakeX = 0;
+                snakeY = 0;
+                snakeDirection = 'right';
+                score = 0;
+                updateScore();
+                generateFood();
+            }
+
+            function gameOver() {
+                alert('Game Over! Your score is: ' + score);
+                restartGame();
+            }
+
+            function moveSnake() {
+                switch (snakeDirection) {
+                    case 'up':
+                        snakeY -= 20;
+                        break;
+                    case 'down':
+                        snakeY += 20;
+                        break;
+                    case 'left':
+                        snakeX -= 20;
+                        break;
+                    case 'right':
+                        snakeX += 20;
+                        break;
+                }
+
+                if (snakeX < 0 || snakeX >= gameContainer.offsetWidth || snakeY < 0 || snakeY >= gameContainer.offsetHeight) {
+                    gameOver();
+                }
+
+                if (snakeX === parseInt(food.style.left) && snakeY === parseInt(food.style.top)) {
+                    score++;
+                    updateScore();
+                    generateFood();
+                }
+
+                snake.style.left = snakeX + 'px';
+                snake.style.top = snakeY + 'px';
+            }
+
+            document.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case 'ArrowUp':
+                        snakeDirection = 'up';
+                        break;
+                    case 'ArrowDown':
+                        snakeDirection = 'down';
+                        break;
+                    case 'ArrowLeft':
+                        snakeDirection = 'left';
+                        break;
+                    case 'ArrowRight':
+                        snakeDirection = 'right';
+                        break;
+                }
+            });
+
+            generateFood();
+            updateScore();
+
+            setInterval(moveSnake, 200);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
